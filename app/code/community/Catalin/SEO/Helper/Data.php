@@ -102,6 +102,15 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
      * @param array $params
      * @return array|null
      */
+    
+    public function getRootCat()
+    {
+    	if (!$this->isEnabled()) {
+    		return false;
+    	}
+    	return Mage::getStoreConfig('catalin_seo/catalog/root_cat');
+    }
+    
     public function getCurrentLayerParams(array $params = null)
     {
         $layerParams = Mage::registry('layer_params');
@@ -121,7 +130,9 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
         }
 
         unset($layerParams['isLayerAjax']);
-
+        //unset category since we are building direct urls!!
+        unset($layerParams['cat']);
+        
         // Sort by key - small SEO improvement
         ksort($layerParams);
         return $layerParams;
@@ -547,4 +558,55 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
         }
     }
 
+
+    public function getCategoryUrlById($id,$noFilters = false, array $q = array())
+    {
+    	$requestPath = Mage::getSingleton('core/url_rewrite')
+    	->getResource()
+    	->getRequestPathByIdPath('category/' . $id, Mage::app()->getStore()->getId());
+    	if(!empty($requestPath))
+    	{
+    		$url =  Mage::getBaseUrl() . $requestPath;
+    	} else {
+    		// Fallback:
+    		$url = Mage::getModel('catalog/category')->load($id)->getUrl();
+    	}
+    
+    	$urlPath = '';
+    
+    	if (!$noFilters) {
+    		// Add filters
+    		$layerParams = $this->getCurrentLayerParams($filters);
+    		foreach ($layerParams as $key => $value) {
+    			// Encode and replace escaped delimiter with the delimiter itself
+    			$value = str_replace(urlencode(self::MULTIPLE_FILTERS_DELIMITER), self::MULTIPLE_FILTERS_DELIMITER, urlencode($value));
+    			$urlPath .= "/{$key}/{$value}";
+    		}
+    	}
+    
+    	// Skip adding routing suffix for links with no filters
+    	if (empty($urlPath)) {
+    		return $url;
+    	}
+    
+    	$urlParts = explode('?', $url);
+    
+    	$suffix = Mage::getStoreConfig('catalog/seo/category_url_suffix');
+    	$urlParts[0] = $this->getUrlBody($suffix, $urlParts[0]);
+    
+    	// Add the suffix to the url - fixes when coming from non suffixed pages
+    	// It should always be the last bits in the URL
+    	$urlParts[0] .= $this->getRoutingSuffix();
+    
+    	$url = $urlParts[0] . $urlPath;
+    	$url = $this->appendSuffix($url, $suffix);
+    	if (!empty($urlParts[1])) {
+    		$url .= '?' . $urlParts[1];
+    	}
+    
+    	return $url;
+    	 
+    }
+    
+    
 }

@@ -42,6 +42,12 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
      *
      * @return array
      */
+
+    /**
+     * Get data array for building category filter items
+     *
+     * @return array
+     */
     protected function _getItemsData()
     {
         if (!Mage::helper('catalin_seo')->isEnabled()) {
@@ -52,17 +58,16 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
         $data = $this->getLayer()->getAggregator()->getCacheData($key);
 
         if ($data === null) {
-            $currentCategory = $this->getCategory();
+        	$catid = Mage::helper('catalin_seo')->getRootCat() ?  Mage::helper('catalin_seo')->getRootCat() : $this->getCategory()-getId();
+        	$currentCategory = Mage::getModel('catalog/category')->load($catid);
             /** @var $currentCategory Mage_Catalog_Model_Category */
             $categories = $this->getChildrenCategories($currentCategory);
-
-            $this->getLayer()->getProductCollection()
-                ->addCountToCategories($categories);
+            $this->getLayer()->getProductCollection()->addCountToCategories($categories);
 
             $data = array();
             foreach ($categories as $category) {
-                if ($category->getIsActive() && $category->getProductCount()) {
-                    if (Mage::helper('catalin_seo')->isCategoryLinksEnabled()) {
+                if ($category->getIsActive() ) {
+                	if (Mage::helper('catalin_seo')->isCategoryLinksEnabled()) {
                         $urlKey = $category->getUrl();
                     } else {
                         $urlKey = $category->getUrlKey();
@@ -72,20 +77,61 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
                             $urlKey = $category->getId() . '-' . $urlKey;
                         }
                     }
-
                     $data[] = array(
                         'label' => Mage::helper('core')->escapeHtml($category->getName()),
-                        'value' => $urlKey,
+                    	'value' => $urlKey,
                         'count' => $category->getProductCount(),
+                    	'children' => $this->_getChildrenCat($category),
+                    	'level' => $category->getLevel(),
+    					'id' => $category->getId(),
+                    	'caturl' => Mage::helper('catalin_seo')->getCategoryUrlById($category->getId())
                     );
                 }
             }
             $tags = $this->getLayer()->getStateTags();
             $this->getLayer()->getAggregator()->saveCacheData($data, $key, $tags);
-        }
+        }  
+        
         return $data;
     }
 
+    protected function _getChildrenCat($currentCategory) {
+    	//do not add anything to tree if current category is not part of active tree
+    	//or current category has no children
+    	if (!$this->isCategoryActive($currentCategory) || count($currentCategory->getChildren()) == 0 ){
+    		return null;
+    	}
+    	/** @var $currentCategory Mage_Catalog_Model_Category */
+    	$categories = $this->getChildrenCategories($currentCategory);
+    	$this->getLayer()->getProductCollection()->addCountToCategories($categories);
+    	$data = array();
+    	foreach ($categories as $category) {
+    		if ($category->getIsActive() ) {
+    			$urlKey = $category->getUrlKey();
+    			if (empty($urlKey)) {
+    				$urlKey = $category->getId();
+    			}
+    			$data[] = $this->_createItem(
+    					Mage::helper('core')->escapeHtml($category->getName()),
+    					$urlKey,
+    					$category->getProductCount(),
+    					$this->getChildrenCat($category),
+    					$category->getLevel(),
+    					$category->getId(),
+    					Mage::helper('catalin_seo')->getCategoryUrlById($category->getId())
+    					);
+    		}
+    	}
+    	return $data;
+    }
+    
+    
+    public function isCategoryActive($category)
+    {
+    	return  $this->getLayer()->getCurrentCategory()->getId() ? in_array($category->getId(), $this->getLayer()->getCurrentCategory()->getPathIds()) : false;
+    }
+    
+    
     /**
      * Apply category filter to layer
      *

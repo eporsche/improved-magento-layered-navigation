@@ -1,64 +1,69 @@
-.idea
-.htaccess
+# Directories #
+/build/
+/bin/
+target/
 
-/*.php
-/*.sh
-/*.ico
-/*.sample
+# Composer #
+composer.lock
+vendor/
+htdocs/
 
-/LICENSE*
-!/LICENSE.txt
-/RELEASE*
+*.class
 
-/downloader/
-/errors/
-/includes/
-/js/
-/lib/
-/mage
-/media/
-/pkginfo/
-/var/
-/shell/
-/dev/
+# Package Files #
+*.jar
+*.war
+*.ear
+*.db
 
-/app/etc/*.xml
-/app/bootstrap.php
-/app/etc/*.template
-/app/etc/*.additional
-/app/etc/modules/Cm_*
-/app/etc/modules/Mage_*
-/app/etc/modules/Phoenix_*
+######################
+# Windows
+######################
+# Windows image file caches
+Thumbs.db
+# Folder config file
+Desktop.ini
 
-/app/Mage.php
+######################
+# OSX
+######################
+.DS_Store
+.svn
 
-/app/code/core/
-/app/code/community/Cm/
-/app/code/community/Phoenix/
+# Thumbnails
+._*
 
-/app/design/adminhtml
-/app/design/install
-/app/design/frontend/default/
-/app/design/frontend/rwd/
-/app/design/frontend/base/default/etc/
-/app/design/frontend/base/default/template/*
-!/app/design/frontend/base/default/template/catalin_seo/
-/app/design/frontend/base/default/layout/*
-!/app/design/frontend/base/default/layout/catalin_seo.xml
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
 
-/app/locale/en_US/*
-!/app/locale/en_US/Catalin_SEO.csv
-!/app/locale/nl_NL/Catalin_SEO.csv
+######################
+# Eclipse
+######################
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+/src/main/resources/rebel.xml
 
-/skin/adminhtml
-/skin/install
-/skin/frontend/rwd/
-/skin/frontend/default/
-/skin/frontend/base/default/css/*
-/skin/frontend/base/default/images/*
-/skin/frontend/base/default/js/*
-/skin/frontend/base/default/lib/
-!/skin/frontend/base/default/css/catalin_seo/
-!/skin/frontend/base/default/images/catalin_seo/
-!/skin/frontend/base/default/js/catalin_seo/
-/skin/frontend/base/default/favicon.ico
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath

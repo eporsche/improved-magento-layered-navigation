@@ -32,4 +32,64 @@ class Catalin_SEO_Block_Catalog_Layer_Filter_Category extends Mage_Catalog_Block
         }
     }
 
+
+    public function renderCategoriesMenuHtmlItem($item){
+    	$isCurrent = ( $this->_current == $item->getId() ? true : false);
+    
+    	$html[] .= '<li '.($hasActiveChildren ? 'class="parentCat"' : '').' >';
+    	if ($isCurrent) {
+    		$html[] = '<span class="isActive">'. $this->escapeHtml($item->getLabel()) .'</span>';
+    	}
+    	else if($item->getCount()>0 && !$isCurrent){
+    		$html[] = '<a href="' . $item->getCaturl() .'">'. $this->escapeHtml($item->getLabel()) . '</a>';
+    	}
+    	else {
+    		$html[] = '<span class="inActive">'. $this->escapeHtml($item->getLabel()) . '</span>';
+    	}
+    
+    	// render children if active category tree
+    	$htmlChildren = '';
+    	foreach ($item->getChildren() as $child) {
+    		$htmlChildren .= $this->renderCategoriesMenuHtmlItem($child);
+    	}
+    	if (!empty($htmlChildren)) {
+    		$html[] = '<ul class="subCat">'.$htmlChildren.'</ul>';
+    	}
+    
+    	$html[] = '</li>';
+    	return implode("\n", $html);
+    }
+    
+    public function renderCategoriesMenuHtml()
+    {
+    	$this->_current = $this->getLayer()->getCurrentCategory()->getId();
+    	$html = '';
+    	foreach($this->getItems() as $item){
+    		$html .= $this->renderCategoriesMenuHtmlItem($item);
+    	}
+    	return $html;
+    }
+    
+    
+    protected function _getItemPosition($level)
+    {
+    	if ($level == 0) {
+    		$zeroLevelPosition = isset($this->_itemLevelPositions[$level]) ? $this->_itemLevelPositions[$level] + 1 : 1;
+    		$this->_itemLevelPositions = array();
+    		$this->_itemLevelPositions[$level] = $zeroLevelPosition;
+    	} elseif (isset($this->_itemLevelPositions[$level])) {
+    		$this->_itemLevelPositions[$level]++;
+    	} else {
+    		$this->_itemLevelPositions[$level] = 1;
+    	}
+    
+    	$position = array();
+    	for($i = 0; $i <= $level; $i++) {
+    		if (isset($this->_itemLevelPositions[$i])) {
+    			$position[] = $this->_itemLevelPositions[$i];
+    		}
+    	}
+    	return implode('-', $position);
+    }
+    
 }
