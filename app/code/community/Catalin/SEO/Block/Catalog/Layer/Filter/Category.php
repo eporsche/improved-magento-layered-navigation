@@ -23,14 +23,13 @@ class Catalin_SEO_Block_Catalog_Layer_Filter_Category extends Mage_Catalog_Block
     public function __construct()
     {
         parent::__construct();
-
-        if ($this->helper('catalin_seo')->isCategoryLinksEnabled()) {
-            /**
-             * Modify template for category filter to disable ajax when url is used.
-             */
-            $this->setTemplate('catalin_seo/catalog/layer/category.phtml');
-        }
+		$this->setCacheTags(array('catalin_category_navigation'));
+		$this->setCacheLifetime(false);
+		if ($this->helper('catalin_seo')->isEnabled()) {
+			$this->setTemplate('catalin_seo/catalog/layer/category.phtml');
+		}
     }
+	
 
 
     public function renderCategoriesMenuHtmlItem($item){

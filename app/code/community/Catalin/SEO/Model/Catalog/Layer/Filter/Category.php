@@ -73,8 +73,6 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
                         $urlKey = $category->getUrlKey();
                         if (empty($urlKey)) {
                             $urlKey = $category->getId();
-                        } else {
-                            $urlKey = $category->getId() . '-' . $urlKey;
                         }
                     }
                     $data[] = array(
@@ -91,7 +89,6 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
             $tags = $this->getLayer()->getStateTags();
             $this->getLayer()->getAggregator()->saveCacheData($data, $key, $tags);
         }  
-        
         return $data;
     }
 
@@ -177,4 +174,46 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
         return $this;
     }
 
+
+    protected function _initItems()
+    {
+    	$data = $this->_getItemsData();
+    	$items=array();
+    	foreach ($data as $itemData) {
+    		$items[] = $this->_createItem(
+    				$itemData['label'],
+    				$itemData['value'],
+    				$itemData['count'],
+    				$itemData['children'],
+    				$itemData['level'],
+    				$itemData['id'],
+    				$itemData['caturl']
+    				);
+    	}
+    
+    	$this->_items = $items;
+    	return $this;
+    }
+    
+    /**
+     * Create filter item object
+     *
+     * @param   string $label
+     * @param   mixed $value
+     * @param   int $count
+     * @return  Mage_Catalog_Model_Layer_Filter_Item
+     */
+    protected function _createItem($label, $value, $count=0, $children, $level=0, $id, $caturl)
+    {
+    	return Mage::getModel('catalog/layer_filter_item')
+    	->setFilter($this)
+    	->setLabel($label)
+    	->setValue($value)
+    	->setCount($count)
+    	->setChildren($children)
+    	->setLevel($level)
+    	->setId($id)
+    	->setCaturl($caturl);
+    }     
+    
 }
