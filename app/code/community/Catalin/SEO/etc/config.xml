@@ -100,6 +100,14 @@
                     </catalin_seo>
                 </observers>
             </controller_front_init_routers>
+            <catalog_product_collection_before_add_count_to_categories>
+            	 <observers>
+                    <catalin_seo_catcount>
+                        <class>Catalin_SEO_Model_Observer</class>
+                        <method>deleteCatFromFilter</method>
+                    </catalin_seo_catcount>
+                </observers>
+            </catalog_product_collection_before_add_count_to_categories>
         </events>
         <index>
             <indexer>
