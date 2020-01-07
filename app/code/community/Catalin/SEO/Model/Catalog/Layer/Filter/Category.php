@@ -58,7 +58,7 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
         $data = $this->getLayer()->getAggregator()->getCacheData($key);
 
         if ($data === null) {
-        	$catid = Mage::helper('catalin_seo')->getRootCat() ?  Mage::helper('catalin_seo')->getRootCat() : $this->getCategory()-getId();
+        	$catid = Mage::helper('catalin_seo')->getRootCat() ?  Mage::helper('catalin_seo')->getRootCat() : $this->getCategory()->getId();
         	$currentCategory = Mage::getModel('catalog/category')->load($catid);
             /** @var $currentCategory Mage_Catalog_Model_Category */
             $categories = $this->getChildrenCategories($currentCategory);
