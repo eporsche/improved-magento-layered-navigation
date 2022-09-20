@@ -58,7 +58,7 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
         $data = $this->getLayer()->getAggregator()->getCacheData($key);
 
         if ($data === null) {
-        	$catid = Mage::helper('catalin_seo')->getRootCat() ?  Mage::helper('catalin_seo')->getRootCat() : $this->getCategory()->getId();
+        	$catid = Mage::helper('catalin_seo')->getRootCat() ?  Mage::helper('catalin_seo')->getRootCat() : $this->getCategory()-getId();
         	$currentCategory = Mage::getModel('catalog/category')->load($catid);
             /** @var $currentCategory Mage_Catalog_Model_Category */
             $categories = $this->getChildrenCategories($currentCategory);
@@ -88,14 +88,14 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
             }
             $tags = $this->getLayer()->getStateTags();
             $this->getLayer()->getAggregator()->saveCacheData($data, $key, $tags);
-        }  
+        }
         return $data;
     }
 
     protected function _getChildrenCat($currentCategory) {
     	//do not add anything to tree if current category is not part of active tree
     	//or current category has no children
-    	if (!$this->isCategoryActive($currentCategory) || count($currentCategory->getChildren()) == 0 ){
+    	if (!$this->isCategoryActive($currentCategory) || count(explode(',',$currentCategory->getChildren())) == 0 ){
     		return null;
     	}
     	/** @var $currentCategory Mage_Catalog_Model_Category */
@@ -108,7 +108,7 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
     			if (empty($urlKey)) {
     				$urlKey = $category->getId();
     			}
-    			$data[] = $this->_createItem(
+    			$data[] = $this->_createFilterItem(
     					Mage::helper('core')->escapeHtml($category->getName()),
     					$urlKey,
     					$category->getProductCount(),
@@ -121,14 +121,14 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
     	}
     	return $data;
     }
-    
-    
+
+
     public function isCategoryActive($category)
     {
     	return  $this->getLayer()->getCurrentCategory()->getId() ? in_array($category->getId(), $this->getLayer()->getCurrentCategory()->getPathIds()) : false;
     }
-    
-    
+
+
     /**
      * Apply category filter to layer
      *
@@ -167,7 +167,7 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
                 ->addCategoryFilter($this->_appliedCategory);
 
             $this->getLayer()->getState()->addFilter(
-                $this->_createItem($this->_appliedCategory->getName(), $filter)
+                $this->_createFilterItem($this->_appliedCategory->getName(), $filter)
             );
         }
 
@@ -180,7 +180,7 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
     	$data = $this->_getItemsData();
     	$items=array();
     	foreach ($data as $itemData) {
-    		$items[] = $this->_createItem(
+    		$items[] = $this->_createFilterItem(
     				$itemData['label'],
     				$itemData['value'],
     				$itemData['count'],
@@ -190,11 +190,11 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
     				$itemData['caturl']
     				);
     	}
-    
+
     	$this->_items = $items;
     	return $this;
     }
-    
+
     /**
      * Create filter item object
      *
@@ -203,7 +203,7 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
      * @param   int $count
      * @return  Mage_Catalog_Model_Layer_Filter_Item
      */
-    protected function _createItem($label, $value, $count=0, $children, $level=0, $id, $caturl)
+    protected function _createFilterItem($label, $value, $count=0, $children, $level=0, $id, $caturl)
     {
     	return Mage::getModel('catalog/layer_filter_item')
     	->setFilter($this)
@@ -214,6 +214,6 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
     	->setLevel($level)
     	->setId($id)
     	->setCaturl($caturl);
-    }     
-    
+    }
+
 }

@@ -102,7 +102,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
      * @param array $params
      * @return array|null
      */
-    
+
     public function getRootCat()
     {
     	if (!$this->isEnabled()) {
@@ -110,7 +110,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
     	}
     	return Mage::getStoreConfig('catalin_seo/catalog/root_cat');
     }
-    
+
     public function getCurrentLayerParams(array $params = null)
     {
         $layerParams = Mage::registry('layer_params');
@@ -132,7 +132,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
         unset($layerParams['isLayerAjax']);
         //unset category since we are building direct urls!!
         unset($layerParams['cat']);
-        
+
         // Sort by key - small SEO improvement
         ksort($layerParams);
         return $layerParams;
@@ -330,26 +330,26 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
 
         foreach ($chars as $i => $c) {
             $ud = 0;
-            if (ord($c{0}) >= 0 && ord($c{0}) <= 127) {
+            if (ord($c[0]) >= 0 && ord($c[0]) <= 127) {
                 continue;
             } // ASCII - next please
-            if (ord($c{0}) >= 192 && ord($c{0}) <= 223) {
-                $ord = (ord($c{0}) - 192) * 64 + (ord($c{1}) - 128);
+            if (ord($c[0]) >= 192 && ord($c[0]) <= 223) {
+                $ord = (ord($c[0]) - 192) * 64 + (ord($c[1]) - 128);
             }
-            if (ord($c{0}) >= 224 && ord($c{0}) <= 239) {
-                $ord = (ord($c{0}) - 224) * 4096 + (ord($c{1}) - 128) * 64 + (ord($c{2}) - 128);
+            if (ord($c[0]) >= 224 && ord($c[0]) <= 239) {
+                $ord = (ord($c[0]) - 224) * 4096 + (ord($c[1]) - 128) * 64 + (ord($c[2]) - 128);
             }
-            if (ord($c{0}) >= 240 && ord($c{0}) <= 247) {
-                $ord = (ord($c{0}) - 240) * 262144 + (ord($c{1}) - 128) * 4096 + (ord($c{2}) - 128) * 64 + (ord($c{3}) - 128);
+            if (ord($c[0]) >= 240 && ord($c[0]) <= 247) {
+                $ord = (ord($c[0]) - 240) * 262144 + (ord($c[1]) - 128) * 4096 + (ord($c[2]) - 128) * 64 + (ord($c[3]) - 128);
             }
-            if (ord($c{0}) >= 248 && ord($c{0}) <= 251) {
-                $ord = (ord($c{0}) - 248) * 16777216 + (ord($c{1}) - 128) * 262144 + (ord($c{2}) - 128) * 4096 + (ord($c{3}) - 128) * 64 + (ord($c{4}) - 128);
+            if (ord($c[0]) >= 248 && ord($c[0]) <= 251) {
+                $ord = (ord($c[0]) - 248) * 16777216 + (ord($c[1]) - 128) * 262144 + (ord($c[2]) - 128) * 4096 + (ord($c[3]) - 128) * 64 + (ord($c[4]) - 128);
             }
-            if (ord($c{0}) >= 252 && ord($c{0}) <= 253) {
-                $ord = (ord($c{0}) - 252) * 1073741824 + (ord($c{1}) - 128) * 16777216 + (ord($c{2}) - 128) * 262144 + (ord($c{3}) - 128) * 4096 + (ord($c{4}) - 128) * 64 + (ord($c{5}) - 128);
+            if (ord($c[0]) >= 252 && ord($c[0]) <= 253) {
+                $ord = (ord($c[0]) - 252) * 1073741824 + (ord($c[1]) - 128) * 16777216 + (ord($c[2]) - 128) * 262144 + (ord($c[3]) - 128) * 4096 + (ord($c[4]) - 128) * 64 + (ord($c[5]) - 128);
             }
-            if (ord($c{0}) >= 254 && ord($c{0}) <= 255) {
-                $chars{$i} = $unknown;
+            if (ord($c[0]) >= 254 && ord($c[0]) <= 255) {
+                $chars[$i] = $unknown;
                 continue;
             } //error
 
@@ -366,9 +366,9 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
 
             $newchar = $ord & 255;
             if (array_key_exists($newchar, $UTF8_TO_ASCII[$bank])) {
-                $chars{$i} = $UTF8_TO_ASCII[$bank][$newchar];
+                $chars[$i] = $UTF8_TO_ASCII[$bank][$newchar];
             } else {
-                $chars{$i} = $unknown;
+                $chars[$i] = $unknown;
             }
         }
         return implode('', $chars);
@@ -405,7 +405,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
 
         $len = strlen($str);
         for ($i = 0; $i < $len; $i++) {
-            $in = ord($str{$i});
+            $in = ord($str[$i]);
             if ($mState == 0) {
                 // When mState is zero we expect either a US-ASCII character or a
                 // multi-octet sequence.
@@ -571,9 +571,9 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
     		// Fallback:
     		$url = Mage::getModel('catalog/category')->load($id)->getUrl();
     	}
-    
+
     	$urlPath = '';
-    
+
     	if (!$noFilters) {
     		// Add filters
     		$layerParams = $this->getCurrentLayerParams($filters);
@@ -583,30 +583,30 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
     			$urlPath .= "/{$key}/{$value}";
     		}
     	}
-    
+
     	// Skip adding routing suffix for links with no filters
     	if (empty($urlPath)) {
     		return $url;
     	}
-    
+
     	$urlParts = explode('?', $url);
-    
+
     	$suffix = Mage::getStoreConfig('catalog/seo/category_url_suffix');
     	$urlParts[0] = $this->getUrlBody($suffix, $urlParts[0]);
-    
+
     	// Add the suffix to the url - fixes when coming from non suffixed pages
     	// It should always be the last bits in the URL
     	$urlParts[0] .= $this->getRoutingSuffix();
-    
+
     	$url = $urlParts[0] . $urlPath;
     	$url = $this->appendSuffix($url, $suffix);
     	if (!empty($urlParts[1])) {
     		$url .= '?' . $urlParts[1];
     	}
-    
+
     	return $url;
-    	 
+
     }
-    
-    
+
+
 }
