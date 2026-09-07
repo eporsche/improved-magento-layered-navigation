@@ -59,7 +59,7 @@ class Catalin_SEO_Controller_Router extends Mage_Core_Controller_Varien_Router_S
         $catPath = $cat;
         $catPath = $helper->appendSuffix($catPath, $suffix);
 
-        if(Mage::getEdition() == Mage::EDITION_ENTERPRISE){
+        if(Mage::getEdition() == 'Enterprise'){
             $urlRequest = Mage::getModel('enterprise_urlrewrite/url_rewrite_request');
             $paths = $urlRequest->getSystemPaths($catPath);
 
@@ -124,7 +124,7 @@ class Catalin_SEO_Controller_Router extends Mage_Core_Controller_Varien_Router_S
 
 
             // EE does not have category ID in enteprise_url_rewrite table
-            if(Mage::getEdition() == Mage::EDITION_ENTERPRISE){
+            if(Mage::getEdition() == 'Enterprise'){
                 list($pathPrefix, $targetPath) = explode('/category/view/id/',$urlRewrite->getTargetPath());
                 $request->setParam('id', $targetPath);
             }
