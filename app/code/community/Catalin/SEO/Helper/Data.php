@@ -212,7 +212,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
      * @return string
      */
     public function getUrlBody($suffix, $urlParts) {
-        if (Mage::getEdition() == Mage::EDITION_ENTERPRISE) {
+        if (Mage::getEdition() == 'Enterprise') {
             $lenSuffix = (strlen($suffix) > 0 ? strlen($suffix) + 1 : 0);
             return substr($urlParts, 0, strlen($urlParts) - $lenSuffix);
         } else {
@@ -233,7 +233,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
         if (strlen($suffix) == 0) {
             return $url;
         }
-        if (Mage::getEdition() == Mage::EDITION_ENTERPRISE ? $ds = "." : $ds="");
+        if (Mage::getEdition() == 'Enterprise' ? $ds = "." : $ds="");
         return $url . $ds . $suffix;
     }
 
@@ -527,7 +527,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
 
     public function getSkinJsUrl()
     {
-        if(Mage::getEdition() == Mage::EDITION_ENTERPRISE){
+        if(Mage::getEdition() == 'Enterprise'){
             return "js/catalin_seo/handler-ee-rwd.js";
         }
 
