@@ -8,7 +8,7 @@ $_showMore = Mage::helper('catalin_seo')->getShowMore();
                 <?php $id = $_item->getFilter()->getRequestVar() . '-' . $_item->getValue(); ?>
                 <div class="layered-nav-filter">
                     <input type="checkbox"<?php if ($_item->isSelected()): ?> checked="checked" <?php endif; ?>
-                           value="<?php echo $this->urlEscape(($_item->isSelected()) ? $_item->getRemoveUrl() : $_item->getUrl()) ?>"
+                           value="<?php echo $this->escapeUrl(($_item->isSelected()) ? $_item->getRemoveUrl() : $_item->getUrl()) ?>"
                            id="<?php echo $id; ?>" />
 
                     <label for="<?php echo $id; ?>" class="layered-nav-filter-label">

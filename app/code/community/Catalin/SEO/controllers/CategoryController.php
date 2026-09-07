@@ -21,7 +21,7 @@ class Catalin_Seo_CategoryController extends Mage_Catalog_CategoryController
 
     public function viewAction()
     {
-        if (($category = $this->_initCatagory())) {
+        if (($category = $this->_initCategory())) {
             $design = Mage::getSingleton('catalog/design');
             $settings = $design->getDesignSettings($category);
 

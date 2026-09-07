@@ -21,7 +21,7 @@ $_nofollow = Mage::helper('catalin_seo')->getNofollow();
         ?>
         <li<?php if ($_hasImage){ echo ' style="line-height: ' . $_lineHeight . 'px;"'; } ?>>
             <?php if ($_hasItems): ?>
-                <a href="<?php echo $this->urlEscape(($_item->isSelected()) ? $_item->getRemoveUrl() : $_item->getUrl()) ?>" class="<?php echo $_linkClass ?>" <?php echo $_nofollow; ?>>
+                <a href="<?php echo $this->escapeUrl(($_item->isSelected()) ? $_item->getRemoveUrl() : $_item->getUrl()) ?>" class="<?php echo $_linkClass ?>" <?php echo $_nofollow; ?>>
             <?php else: ?>
                 <span class="<?php echo $_linkClass ?>">
             <?php endif; ?>

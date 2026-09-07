@@ -48,8 +48,7 @@ class Catalin_SEO_Model_CatalogSearch_Layer extends Catalin_SEO_Model_Catalog_La
             ->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes())
             ->addSearchFilter(Mage::helper('catalogsearch')->getQuery()->getQueryText())
             ->setStore(Mage::app()->getStore())
-            ->addMinimalPrice()
-            ->addFinalPrice()
+            ->addPriceData()
             ->addTaxPercents()
             ->addStoreFilter()
             ->addUrlRewrite();
