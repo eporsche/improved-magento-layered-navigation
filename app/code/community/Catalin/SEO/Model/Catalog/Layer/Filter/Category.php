@@ -203,7 +203,7 @@ class Catalin_SEO_Model_Catalog_Layer_Filter_Category extends Mage_Catalog_Model
      * @param   int $count
      * @return  Mage_Catalog_Model_Layer_Filter_Item
      */
-    protected function _createFilterItem($label, $value, $count=0, $children, $level=0, $id, $caturl)
+    protected function _createFilterItem($label, $value, $count = 0, $children = [], $level = 0, $id = null, $caturl = null)
     {
     	return Mage::getModel('catalog/layer_filter_item')
     	->setFilter($this)
