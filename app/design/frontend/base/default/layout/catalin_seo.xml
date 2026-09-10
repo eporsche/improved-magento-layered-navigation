@@ -6,7 +6,10 @@
                 <type>skin_css</type>
                 <name>css/catalin_seo/style.css</name>
             </action>
-            <action method="addItem">
+            <!-- History.js braucht nur der AJAX-Zweig von handler.js; ohne AJAX bleibt die Bibliothek ungenutzt,
+                 bindet aber beim Laden unload-Handler. Chrome meldet dafuer seit der Abkuendigung von unload
+                 "Permissions policy violation: unload is not allowed in this document". -->
+            <action method="addItem" ifconfig="catalin_seo/catalog/ajax_enabled">
                 <type>skin_js</type>
                 <name>js/catalin_seo/native.history.js</name>
             </action>
@@ -48,7 +51,10 @@
                 <type>skin_css</type>
                 <name>css/catalin_seo/style.css</name>
             </action>
-            <action method="addItem">
+            <!-- History.js braucht nur der AJAX-Zweig von handler.js; ohne AJAX bleibt die Bibliothek ungenutzt,
+                 bindet aber beim Laden unload-Handler. Chrome meldet dafuer seit der Abkuendigung von unload
+                 "Permissions policy violation: unload is not allowed in this document". -->
+            <action method="addItem" ifconfig="catalin_seo/catalog/ajax_enabled">
                 <type>skin_js</type>
                 <name>js/catalin_seo/native.history.js</name>
             </action>
