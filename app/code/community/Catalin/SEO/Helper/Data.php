@@ -177,7 +177,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
             foreach ($layerParams as $key => $value) {
                 // Encode and replace escaped delimiter with the delimiter itself
                 $value = str_replace(urlencode(self::MULTIPLE_FILTERS_DELIMITER), self::MULTIPLE_FILTERS_DELIMITER, urlencode($value));
-                $urlPath .= "/{$key}/{$value}";
+                $urlPath .= '/' . urlencode($key) . "/{$value}";
             }
         }
 
@@ -580,7 +580,7 @@ class Catalin_SEO_Helper_Data extends Mage_Core_Helper_Data
     		foreach ($layerParams as $key => $value) {
     			// Encode and replace escaped delimiter with the delimiter itself
     			$value = str_replace(urlencode(self::MULTIPLE_FILTERS_DELIMITER), self::MULTIPLE_FILTERS_DELIMITER, urlencode($value));
-    			$urlPath .= "/{$key}/{$value}";
+    			$urlPath .= '/' . urlencode($key) . "/{$value}";
     		}
     	}
 

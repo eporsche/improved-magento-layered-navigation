@@ -131,12 +131,19 @@ class Catalin_SEO_Controller_Router extends Mage_Core_Controller_Varien_Router_S
 
             // Parse url params
             $params = explode('/', trim($urlSplit[1], '/'));
+            $filterKeys = $this->_getFilterKeys();
             $layerParams = array();
             $total = count($params);
             for ($i = 0; $i < $total - 1; $i++) {
                 if (isset($params[$i + 1])) {
-                    $layerParams[$params[$i]] = urldecode($params[$i + 1]);
+                    $key = $params[$i];
+                    $value = urldecode($params[$i + 1]);
                     ++$i;
+                    // Accept only filter names known to the layered navigation
+                    if (!isset($filterKeys[$key])) {
+                        continue;
+                    }
+                    $layerParams[$key] = $value;
                 }
             }
             // Add post params to parsed ones from url
@@ -155,6 +162,26 @@ class Catalin_SEO_Controller_Router extends Mage_Core_Controller_Varien_Router_S
             return true;
         }
         return false;
+    }
+
+    /**
+     * Filter names accepted from the path: the category filter and the request variables of all
+     * filterable attributes, i.e. their url keys (manufacturer -> hersteller), see
+     * Catalin_SEO_Model_Catalog_Layer_Filter_Attribute::setRequestVar()
+     *
+     * @return array request variable => true
+     */
+    protected function _getFilterKeys()
+    {
+        $urlKeys = Mage::getResourceModel('catalin_seo/attribute_urlkey');
+        $keys = array('cat' => true);
+        $codes = Mage::getResourceModel('catalog/product_attribute_collection')
+            ->addIsFilterableFilter()
+            ->getColumnValues('attribute_code');
+        foreach ($codes as $code) {
+            $keys[$urlKeys->getUrlKey($code)] = true;
+        }
+        return $keys;
     }
 
 }
